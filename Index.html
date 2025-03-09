@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ＣＨＡＬＡＨ  | ᥫ᭡ IMG GEN</title>
+    <link rel="icon" href="https://i.ibb.co/0yTySzj/20250219-091554.png" type="image/png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('https://source.unsplash.com/1600x900/?technology,blue') no-repeat center center fixed;
+            background-size: cover;
+            color: #e0e0e0;
+            text-align: center;
+            transition: background 0.5s ease-in-out;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        h1 { 
+            color: #00b0ff; 
+            animation: fadeIn 3s ease-in-out; 
+        }
+
+        #chat-container {
+            width: 90%;
+            max-width: 400px;
+            margin: 20px auto;
+            border-radius: 10px;
+            background: #222;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 2px solid #FFD700;
+            animation: slideUp 2s ease-out;
+        }
+
+        input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            outline: none;
+            border-radius: 5px;
+            background: #333;
+            color: #fff;
+            border: 2px solid #FFD700;
+        }
+
+        button {
+            margin-left: 10px;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            background: #9b59b6;
+            color: #fff;
+            border-radius: 5px;
+            border: 2px solid #FFD700;
+            animation: bounce 1s infinite;
+        }
+
+        button:hover { background: #8e44ad; }
+
+        .image-container img {
+            max-width: 90%;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 2px solid #FFD700;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        .download-btn {
+            display: none; 
+            margin-top: 15px;
+            padding: 10px 15px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .download-btn:hover { background: #218838; }
+
+        @keyframes flicker {
+            0% { opacity: 1; text-shadow: 0 0 10px #FFD700, 0 0 20px #ff0; }
+            50% { opacity: 0.2; text-shadow: none; }
+            100% { opacity: 1; text-shadow: 0 0 10px #FFD700, 0 0 20px #ff0; }
+        }
+
+        @keyframes thunder {
+            0%, 30%, 60%, 100% { opacity: 1; }
+            15%, 45%, 75% { opacity: 0; }
+        }
+
+        .support-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FFD700;
+            text-align: center;
+            margin-top: 20px;
+            animation: flicker 1s infinite, thunder 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <h1>ＣＨＡＬＡＨ  | ᥫ᭡ IMG GEN</h1>
+
+    <div id="chat-container">
+        <input type="text" id="promptInput" placeholder="Type your prompt...">
+        <button id="generateBtn">Send</button>
+    </div>
+
+    <div class="loading" id="loadingMessage" style="display: none;"></div>
+    <div class="image-container" id="imageContainer"></div>
+    
+    <!-- Download Button -->
+    <button id="downloadBtn" class="download-btn">Download Image</button>
+
+    <!-- Support CHALAH MD Animated Text -->
+    <h2 class="support-text">SUPPORT CHALAH MD ⚡</h2>
+
+    <script>
+        const loadingMessages = [
+            "MAKING🦠 ", "STARTING🔐", "EDITING🧬 ", " POWERD BY CHALAH MD"
+        ];
+        let currentMessageIndex = 0;
+        let loadingInterval;
+        let generatedImageUrl = '';  
+        const API_BASE_URL = "https://dark-shan-yt.koyeb.app/ai/generate-image-v2?prompt=";
+
+        function updateLoadingMessage() {
+            document.getElementById('loadingMessage').textContent = loadingMessages[currentMessageIndex];
+            currentMessageIndex = (currentMessageIndex + 1) % loadingMessages.length;
+        }
+
+        function stopLoadingInterval() {
+            clearInterval(loadingInterval);
+            document.getElementById('loadingMessage').textContent = loadingMessages[3]; 
+        }
+
+        function generateImage(prompt) {
+            if (!prompt) {
+                alert("Please enter a prompt!");
+                return;
+            }
+            document.getElementById('loadingMessage').style.display = 'block';
+            loadingInterval = setInterval(updateLoadingMessage, 1000);
+            document.getElementById('imageContainer').innerHTML = '';
+            document.getElementById('downloadBtn').style.display = 'none';
+
+            let finalPrompt = encodeURIComponent(prompt);
+            let imageUrl = `${API_BASE_URL}${finalPrompt}`;
+
+            fetch(imageUrl)
+                .then(response => response.blob()) 
+                .then(blob => {
+                    const imageObjectUrl = URL.createObjectURL(blob);
+                    stopLoadingInterval();
+
+                    const img = new Image();
+                    img.src = imageObjectUrl;
+                    img.onload = () => {
+                        document.getElementById('imageContainer').appendChild(img);
+                        generatedImageUrl = imageObjectUrl;
+                        
+                        // Show Download Button
+                        document.getElementById('downloadBtn').style.display = 'block';
+                    };
+                })
+                .catch(error => {
+                    stopLoadingInterval();
+                    document.getElementById('loadingMessage').style.display = 'none';
+                    alert('Error generating image: ' + error.message);
+                });
+        }
+
+        document.getElementById('generateBtn').addEventListener('click', () => {
+            const userPrompt = document.getElementById('promptInput').value;
+            if (userPrompt.trim()) {
+                generateImage(userPrompt);
+            }
+        });
+
+        // Download Button Click Event
+        document.getElementById('downloadBtn').addEventListener('click', () => {
+            if (generatedImageUrl) {
+                const link = document.createElement('a');
+                link.href = generatedImageUrl;
+                link.download = 'generated-image.png';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else {
+                alert("No image generated yet!");
+            }
+        });
+
+        window.onload = () => {
+            setInterval(() => {
+                document.body.style.background = `url('https://source.unsplash.com/1600x900/?technology,blue&random=${Math.random()}') no-repeat center center fixed`;
+                document.body.style.backgroundSize = 'cover';
+            }, 5000);
+        };
+    </script>
+</body>
+</html>
