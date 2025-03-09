@@ -1,0 +1,41 @@
+/* Body styles */
+body {
+    font-family: Arial, sans-serif;
+    background: url('https://source.unsplash.com/1600x900/?technology,blue') no-repeat center center fixed;
+    background-size: cover;
+    color: #e0e0e0;
+    text-align: center;
+    transition: background 0.5s ease-in-out;
+    animation: fadeIn 2s ease-in-out;
+}
+
+/* Keyframe animation for fading in */
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+h1 { 
+    color: #00b0ff; 
+    animation: fadeIn 3s ease-in-out; 
+}
+
+/* Chat container styling */
+#chat-container {
+    width: 90%;
+    max-width: 400px;
+    margin: 20px auto;
+    border-radius: 10px;
+    background: #222;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 2px solid #FFD700;
+    animation: slideUp 2s ease-out;
+}
+
+/* Input field styling */
+input {
+    flex: 1;
+    padding
